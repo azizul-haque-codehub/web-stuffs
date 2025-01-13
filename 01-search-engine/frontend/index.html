@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Simple Search Engine Demo</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 20px;
+			}
+			#results {
+				margin-top: 20px;
+			}
+			.result-item {
+				margin-bottom: 10px;
+				padding: 10px;
+				border: 1px solid #ddd;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Simple Google Search Engine</h1>
+		<input type="text" id="searchBox" placeholder="Type your query..." />
+		<button onclick="performSearch()">Search</button>
+
+		<div id="results"></div>
+
+		<script>
+			async function performSearch() {
+				const query = document.getElementById("searchBox").value;
+				if (!query) {
+					alert("Please enter a search query");
+					return;
+				}
+
+				try {
+					const response = await fetch(
+						`http://localhost:3000/search?q=${query}`,
+					);
+					const data = await response.json();
+					console.log(data);
+					// Render results
+					const resultsDiv = document.getElementById("results");
+					resultsDiv.innerHTML = "";
+
+					if (data.results.length === 0) {
+						resultsDiv.innerHTML = "<p>No results found.</p>";
+						return;
+					}
+
+					data.results.forEach((item) => {
+						const resultItem = document.createElement("div");
+						resultItem.className = "result-item";
+						resultItem.innerHTML = `
+                        <h3>${item.title}</h3><p>${item.content}</p>
+                        <a href=${
+													item.href
+												} target='_blank'>Go ${item.title.slice(0, 10)} </a>
+                        `;
+						resultsDiv.appendChild(resultItem);
+					});
+				} catch (error) {
+					console.error("Error fetching search results:", error);
+					alert("Failed to fetch search results");
+				}
+			}
+		</script>
+	</body>
+</html>
