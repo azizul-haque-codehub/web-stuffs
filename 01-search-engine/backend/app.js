@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require("cors");
-// Sample data to simulate indexed web pages
+// Sample data to simulate indexed web pages (static data that's why we don't needed crawler)
 const indexedData = [
 	{
 		id: 1,
